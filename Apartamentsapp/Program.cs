@@ -1,7 +1,14 @@
 ﻿using Apartamentsapp;
+try
+{
+    Console.WriteLine("Enter the path to the CSV file:");
+string filePath = Console.ReadLine();
 
-
-string filePath = @"D:\test.csv";
+if (!File.Exists(filePath))
+{
+    Console.WriteLine($"File '{filePath}' not found.");
+    return;
+}
 Dictionary<string, Flats> flatsDictionary = new Dictionary<string, Flats>();
 
 DataLoader.ReadDataFromCSV(filePath, flatsDictionary);
@@ -18,7 +25,11 @@ foreach (var district in districts)
     tasks.Add(averagePriceCalculator.GetAveragePriceAsync(district));
 }
 
+tasks.Add(averagePriceCalculator.GetAveragePriceForCityAsync());
 await Task.WhenAll(tasks);
-
 Console.WriteLine("All tasks completed.");
-
+}
+catch (Exception ex)
+            {
+    Console.WriteLine($"An error occurred: {ex.Message}");
+}
