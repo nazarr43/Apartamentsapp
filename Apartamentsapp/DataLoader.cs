@@ -12,7 +12,7 @@
                 int price = int.Parse(values[1]);
                 int area = int.Parse(values[2]);
                 string district = values[3];
-                flatsDictionary[flatName] = new Flats { ApartmentPrice = price, Area = area, District = district };
+                flatsDictionary[flatName] = new Flats {FlatName = flatName, ApartmentPrice = price, Area = area, District = district };
             }
         }
     }

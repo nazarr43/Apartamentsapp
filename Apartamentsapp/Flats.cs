@@ -8,6 +8,7 @@ namespace Apartamentsapp
 {
     public class Flats
     {
+        public string FlatName { get; set; }
         public int ApartmentPrice { get; set; }
         public int Area { get; set; }
         public string District { get; set; }
