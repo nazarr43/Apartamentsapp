@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,11 @@ namespace Apartamentsapp
     {
         SemaphoreSlim semaphoreSlim = new SemaphoreSlim(3);
         Dictionary<string, Flats> flatsDictionary;
-        public Grouping(Dictionary<string, Flats> flatsDictionary)
+        private readonly ILogger _logger;
+        public Grouping(Dictionary<string, Flats> flatsDictionary, ILogger logger)
         {
             this.flatsDictionary = flatsDictionary;
+            _logger = logger;
         }
         public async Task GroupingAndSortingAsync(string District)
         {
@@ -33,7 +36,7 @@ namespace Apartamentsapp
                 }
                 else
                 {
-                    Console.WriteLine($"No flats found in {District}");
+                    _logger.Information($"No flats found in {District}");
                 }
             }
             finally

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,11 @@ namespace Apartamentsapp
     {
         SemaphoreSlim semaphoreSlim = new SemaphoreSlim(3);
         Dictionary<string, Flats> flatsDictionary;
-        public AveragePrice(Dictionary<string, Flats> flatsDictionary)
+        private readonly ILogger _logger;
+        public AveragePrice(Dictionary<string, Flats> flatsDictionary, ILogger logger)
         {
             this.flatsDictionary = flatsDictionary;
+            _logger = logger;
         }
         public async Task GetAveragePriceAsync(string District)
         {
@@ -29,12 +32,12 @@ namespace Apartamentsapp
                 }
                 else
                 {
-                    Console.WriteLine($"No flats found in {District}");
+                    _logger.Information($"No flats found in {District}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred in GetAveragePriceAsync: {ex.Message}");
+                _logger.Information($"An error occurred in GetAveragePriceAsync: {ex.Message}");
             }
             finally
             {
@@ -54,12 +57,13 @@ namespace Apartamentsapp
                 }
                 else
                 {
-                    Console.WriteLine("No flats found in the city.");
+                    _logger.Information($"No flats found in the city");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred in GetAveragePriceForCityAsync: {ex.Message}");
+                _logger.Information($"An error occurred in GetAveragePriceForCityAsync: {ex.Message}");
+
             }
             finally
             {
