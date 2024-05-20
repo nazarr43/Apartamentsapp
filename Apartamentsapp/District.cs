@@ -8,5 +8,11 @@ namespace Apartamentsapp
 {
     public enum District
     {
+        Lychakiv,
+        Shevchenkivskyi,
+        Sykhiv,
+        Frankivskyi,
+        Zaliznychnyi,
+        Horodetskyi
     }
 }

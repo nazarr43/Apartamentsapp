@@ -2,8 +2,9 @@
 {
     public class DataLoader
     {
-        public static void ReadDataFromCSV(string filePath, Dictionary<string, Flat> flatsDictionary)
+        public static void ReadDataFromCSV(string filePath, Dictionary<string, Flat> flats)
         {
+            List<string> districts = new List<string>();
             try
             {
                 using (var reader = new StreamReader(filePath))
@@ -21,7 +22,29 @@
                         }
                         try
                         {
-                            flatsDictionary[values[0]] = new Flat { FlatName = values[0], ApartmentPrice = int.Parse(values[1]), Area = int.Parse(values[2]), District = values[3] };
+                            if (string.IsNullOrEmpty(values[0]))
+                            {
+                                Console.WriteLine($"Flat name cannot be empty in line: {line}");
+                                continue;
+                            }
+                            else if (!double.TryParse(values[1], out double apartmentPrice))
+                            {
+                                Console.WriteLine($"Invalid apartment price in line: {line}");
+                                continue;
+                            }
+                            if (!double.TryParse(values[2], out double area))
+                            {
+                                Console.WriteLine($"Invalid area in line: {line}");
+                                continue;
+                            }
+
+                            if (!Enum.TryParse(values[3], out District district))
+                            {
+                                Console.WriteLine($"Invalid district in line: {line}");
+                                continue;
+                            }
+                            flats[values[0]] = new Flat { FlatName = values[0], ApartmentPrice = int.Parse(values[1]), Area = int.Parse(values[2]), District = (District)Enum.Parse(typeof(District), values[3]) };
+                            
                         }
                         catch (FormatException)
                         {
