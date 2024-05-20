@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Apartamentsapp
 {
-    public class Flats
+    public class Flat
     {
         public string FlatName { get; set; }
         public int ApartmentPrice { get; set; }

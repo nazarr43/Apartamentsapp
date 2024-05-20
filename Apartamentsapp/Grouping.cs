@@ -10,9 +10,9 @@ namespace Apartamentsapp
     public class Grouping
     {
         SemaphoreSlim semaphoreSlim = new SemaphoreSlim(3);
-        Dictionary<string, Flats> flatsDictionary;
+        Dictionary<string, Flat> flatsDictionary;
         private readonly ILogger _logger;
-        public Grouping(Dictionary<string, Flats> flatsDictionary, ILogger logger)
+        public Grouping(Dictionary<string, Flat> flatsDictionary, ILogger logger)
         {
             this.flatsDictionary = flatsDictionary;
             _logger = logger;
