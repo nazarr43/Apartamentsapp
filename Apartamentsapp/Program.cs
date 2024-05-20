@@ -15,23 +15,23 @@ try
         Log.Information($"File '{filePath}' not found");
         return;
     }
-    Dictionary<string, Flats> flatsDictionary = new Dictionary<string, Flats>();
+    Dictionary<string, Flat> flats = new Dictionary<string, Flat>();
 
-    DataLoader.ReadDataFromCSV(filePath, flatsDictionary);
-    var districts = flatsDictionary.Values
+    DataLoader.ReadDataFromCSV(filePath, flats);
+    var districts = flats.Values
                     .Select(flat => flat.District)
                     .Distinct()
                     .ToArray();
     List<Task> tasks = new List<Task>();
-    Grouping grouping = new Grouping(flatsDictionary, Log.Logger);
-    AveragePrice averagePriceCalculator = new AveragePrice(flatsDictionary, Log.Logger);
+    Grouping grouping = new Grouping(flats, Log.Logger);
+    AveragePrice averagePriceCalculator = new AveragePrice(flats, Log.Logger);
     foreach (var district in districts)
     {
-        tasks.Add(grouping.GroupingAndSortingAsync(district));
+        tasks.Add(grouping.GetGroupedAndSorted(district));
         tasks.Add(averagePriceCalculator.GetAveragePriceAsync(district));
     }
 
-    tasks.Add(averagePriceCalculator.GetAveragePriceForCityAsync());
+    tasks.Add(averagePriceCalculator.GetAveragePricesForCitiesAsync());
     await Task.WhenAll(tasks);
     Console.WriteLine("All tasks completed.");
 }

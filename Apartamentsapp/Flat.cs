@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Apartamentsapp
 {
-    public class Flats
+    public class Flat
     {
         public string FlatName { get; set; }
-        public int ApartmentPrice { get; set; }
-        public int Area { get; set; }
-        public string District { get; set; }
+        public double ApartmentPrice { get; set; }
+        public double Area { get; set; }
+        public District District { get; set; }
     }
 }
