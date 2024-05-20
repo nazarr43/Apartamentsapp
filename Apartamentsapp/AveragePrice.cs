@@ -17,22 +17,22 @@ namespace Apartamentsapp
             this.flatsDictionary = flatsDictionary;
             _logger = logger;
         }
-        public async Task GetAveragePriceAsync(string District)
+        public async Task GetAveragePriceAsync(District district)
         {
             await semaphoreSlim.WaitAsync();
             try
             {
                 var pricesInDistrict = flatsDictionary.Values
-                    .Where(flat => flat.District == District)
-                    .Select(flat => flat.Area);
+                    .Where(flat => flat.District == district)
+                    .Select(flat => flat.ApartmentPrice);
                 if (pricesInDistrict.Any())
                 {
                     double AveragePrice = pricesInDistrict.Average();
-                    Console.WriteLine($"Average price in {District}: {AveragePrice}");
+                    Console.WriteLine($"Average price in {district}: {AveragePrice}");
                 }
                 else
                 {
-                    _logger.Information($"No flats found in {District}");
+                    _logger.Information($"No flats found in {district}");
                 }
             }
             catch (Exception ex)
@@ -44,7 +44,7 @@ namespace Apartamentsapp
                 semaphoreSlim.Release();
             }
         }
-        public async Task GetAveragePriceForCityAsync()
+        public async Task GetAveragePricesForCitiesAsync()
         {
             await semaphoreSlim.WaitAsync();
             try

@@ -10,25 +10,25 @@ namespace Apartamentsapp
     public class Grouping
     {
         SemaphoreSlim semaphoreSlim = new SemaphoreSlim(3);
-        Dictionary<string, Flat> flatsDictionary;
+        Dictionary<string, Flat> flats;
         private readonly ILogger _logger;
-        public Grouping(Dictionary<string, Flat> flatsDictionary, ILogger logger)
+        public Grouping(Dictionary<string, Flat> flats, ILogger logger)
         {
-            this.flatsDictionary = flatsDictionary;
+            this.flats = flats;
             _logger = logger;
         }
-        public async Task GroupingAndSortingAsync(string District)
+        public async Task GetGroupedAndSorted(District district)
         {
             await semaphoreSlim.WaitAsync();
             try
             {
-                var group = flatsDictionary.Values
-                    .Where(flat => flat.District == District)
+                var group = flats.Values
+                    .Where(flat => flat.District == district)
                     .OrderBy(flat => flat.FlatName);
 
                 if (group.Any())
                 {
-                    Console.WriteLine($"District sort: {District}");
+                    Console.WriteLine($"District sort: {district}");
                     foreach (var flat in group)
                     {
                         Console.WriteLine($"Owner name: {flat.FlatName},ApartmentPrice: {flat.ApartmentPrice},Area: {flat.Area}");
@@ -36,7 +36,7 @@ namespace Apartamentsapp
                 }
                 else
                 {
-                    _logger.Information($"No flats found in {District}");
+                    _logger.Information($"No flats found in {district}");
                 }
             }
             finally
