@@ -15,9 +15,10 @@ try
         Log.Information($"File '{filePath}' not found");
         return;
     }
-    Dictionary<string, Flat> flats = new Dictionary<string, Flat>();
 
-    DataLoader.ReadDataFromCSV(filePath, flats);
+    var dataLoader = new DataLoader();
+    var flats = dataLoader.ReadDataFromCSV(filePath);
+
     var districts = flats.Values
                     .Select(flat => flat.District)
                     .Distinct()

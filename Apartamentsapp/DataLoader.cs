@@ -2,31 +2,28 @@
 {
     public class DataLoader
     {
-        public static void ReadDataFromCSV(string filePath, Dictionary<string, Flat> flats)
+        public Dictionary<string, Flat> ReadDataFromCSV(string filePath)
         {
-            List<string> districts = new List<string>();
+            Dictionary<string, Flat> flats = new Dictionary<string, Flat>();
             try
             {
-                using (var reader = new StreamReader(filePath))
-                {
-                    reader.ReadLine();
-                    string line;
+                using var reader = new StreamReader(filePath);
+                reader.ReadLine();
+                string line;
 
-                    while ((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] values = line.Split(',');
+                    if (values.Length != 4)
                     {
-                        string[] values = line.Split(',');
-                        if (values.Length != 4)
-                        {
-                            Console.WriteLine($"Incorrect data format in line: {line}");
-                            continue;
-                        }
-                        if (TryParseFlat(values, out Flat flat, line))
-                        {
-                            flats[flat.FlatName] = flat;
-                        }
+                        Console.WriteLine($"Incorrect data format in line: {line}");
+                        continue;
+                    }
+                    if (TryParseFlat(values, out Flat flat, line))
+                    {
+                        flats[flat.FlatName] = flat;
                     }
                 }
-
             }
             catch (FileNotFoundException)
             {
@@ -44,6 +41,7 @@
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+            return flats;
         }
         private static bool TryParseFlat(string[] values, out Flat flat, string line)
         {
@@ -66,7 +64,8 @@
                 return false;
             }
 
-            if (!Enum.TryParse(values[3], out District district))
+            var district = default(District);
+            if (!Enum.TryParse(values[3], out district))
             {
                 Console.WriteLine($"Invalid district in line: {line}");
                 return false;
