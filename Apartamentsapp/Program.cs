@@ -15,16 +15,17 @@ try
         Log.Information($"File '{filePath}' not found");
         return;
     }
-    Dictionary<string, Flat> flats = new Dictionary<string, Flat>();
 
-    DataLoader.ReadDataFromCSV(filePath, flats);
+    var dataLoader = new DataLoader();
+    var flats = dataLoader.ReadDataFromCSV(filePath);
+
     var districts = flats.Values
                     .Select(flat => flat.District)
                     .Distinct()
                     .ToArray();
     List<Task> tasks = new List<Task>();
-    Grouping grouping = new Grouping(flats, Log.Logger);
-    AveragePrice averagePriceCalculator = new AveragePrice(flats, Log.Logger);
+    var grouping = new Grouping(flats, Log.Logger);
+    var averagePriceCalculator = new AveragePrice(flats, Log.Logger);
     foreach (var district in districts)
     {
         tasks.Add(grouping.GetGroupedAndSorted(district));

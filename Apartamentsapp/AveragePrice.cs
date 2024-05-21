@@ -1,20 +1,15 @@
 ﻿using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Apartamentsapp
 {
     public class AveragePrice
     {
         SemaphoreSlim semaphoreSlim = new SemaphoreSlim(3);
-        Dictionary<string, Flat> flatsDictionary;
+        Dictionary<string, Flat> _flats;
         private readonly ILogger _logger;
-        public AveragePrice(Dictionary<string, Flat> flatsDictionary, ILogger logger)
+        public AveragePrice(Dictionary<string, Flat> flats, ILogger logger)
         {
-            this.flatsDictionary = flatsDictionary;
+            _flats = flats;
             _logger = logger;
         }
         public async Task GetAveragePriceAsync(District district)
@@ -22,12 +17,12 @@ namespace Apartamentsapp
             await semaphoreSlim.WaitAsync();
             try
             {
-                var pricesInDistrict = flatsDictionary.Values
+                var pricesInDistrict = _flats.Values
                     .Where(flat => flat.District == district)
                     .Select(flat => flat.ApartmentPrice);
                 if (pricesInDistrict.Any())
                 {
-                    double AveragePrice = pricesInDistrict.Average();
+                    decimal AveragePrice = pricesInDistrict.Average();
                     Console.WriteLine($"Average price in {district}: {AveragePrice}");
                 }
                 else
@@ -49,10 +44,10 @@ namespace Apartamentsapp
             await semaphoreSlim.WaitAsync();
             try
             {
-                var allPrices = flatsDictionary.Values.Select(flat => flat.Area);
+                var allPrices = _flats.Values.Select(flat => flat.Area);
                 if (allPrices.Any())
                 {
-                    double averagePrice = allPrices.Average();
+                    decimal averagePrice = allPrices.Average();
                     Console.WriteLine($"Average price for the city: {averagePrice}");
                 }
                 else
