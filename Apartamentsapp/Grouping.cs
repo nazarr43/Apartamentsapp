@@ -10,11 +10,11 @@ namespace Apartamentsapp
     public class Grouping
     {
         SemaphoreSlim semaphoreSlim = new SemaphoreSlim(3);
-        Dictionary<string, Flat> flats;
+        Dictionary<string, Flat> _flats;
         private readonly ILogger _logger;
         public Grouping(Dictionary<string, Flat> flats, ILogger logger)
         {
-            this.flats = flats;
+            _flats = flats;
             _logger = logger;
         }
         public async Task GetGroupedAndSorted(District district)
@@ -22,7 +22,7 @@ namespace Apartamentsapp
             await semaphoreSlim.WaitAsync();
             try
             {
-                var group = flats.Values
+                var group = _flats.Values
                     .Where(flat => flat.District == district)
                     .OrderBy(flat => flat.FlatName);
 

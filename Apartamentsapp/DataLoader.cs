@@ -20,35 +20,9 @@
                             Console.WriteLine($"Incorrect data format in line: {line}");
                             continue;
                         }
-                        try
+                        if (TryParseFlat(values, out Flat flat, line))
                         {
-                            if (string.IsNullOrEmpty(values[0]))
-                            {
-                                Console.WriteLine($"Flat name cannot be empty in line: {line}");
-                                continue;
-                            }
-                            else if (!double.TryParse(values[1], out double apartmentPrice))
-                            {
-                                Console.WriteLine($"Invalid apartment price in line: {line}");
-                                continue;
-                            }
-                            if (!double.TryParse(values[2], out double area))
-                            {
-                                Console.WriteLine($"Invalid area in line: {line}");
-                                continue;
-                            }
-
-                            if (!Enum.TryParse(values[3], out District district))
-                            {
-                                Console.WriteLine($"Invalid district in line: {line}");
-                                continue;
-                            }
-                            flats[values[0]] = new Flat { FlatName = values[0], ApartmentPrice = int.Parse(values[1]), Area = int.Parse(values[2]), District = (District)Enum.Parse(typeof(District), values[3]) };
-                            
-                        }
-                        catch (FormatException)
-                        {
-                            Console.WriteLine($"Incorrect data format in line: {line}");
+                            flats[flat.FlatName] = flat;
                         }
                     }
                 }
@@ -70,6 +44,36 @@
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+        private static bool TryParseFlat(string[] values, out Flat flat, string line)
+        {
+            flat = null;
+            if (string.IsNullOrEmpty(values[0]))
+            {
+                Console.WriteLine($"Flat name cannot be empty in line: {line}");
+                return false;
+            }
+
+            if (!double.TryParse(values[1], out var apartmentPrice))
+            {
+                Console.WriteLine($"Invalid apartment price in line: {line}");
+                return false;
+            }
+
+            if (!double.TryParse(values[2], out var area))
+            {
+                Console.WriteLine($"Invalid area in line: {line}");
+                return false;
+            }
+
+            if (!Enum.TryParse(values[3], out District district))
+            {
+                Console.WriteLine($"Invalid district in line: {line}");
+                return false;
+            }
+            flat = new Flat { FlatName = values[0], ApartmentPrice = int.Parse(values[1]), Area = int.Parse(values[2]), District = (District)Enum.Parse(typeof(District), values[3]) };
+            return true;
+
         }
     }
 }

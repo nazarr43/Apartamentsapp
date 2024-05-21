@@ -23,8 +23,8 @@ try
                     .Distinct()
                     .ToArray();
     List<Task> tasks = new List<Task>();
-    Grouping grouping = new Grouping(flats, Log.Logger);
-    AveragePrice averagePriceCalculator = new AveragePrice(flats, Log.Logger);
+    var grouping = new Grouping(flats, Log.Logger);
+    var averagePriceCalculator = new AveragePrice(flats, Log.Logger);
     foreach (var district in districts)
     {
         tasks.Add(grouping.GetGroupedAndSorted(district));
